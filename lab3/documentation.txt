@@ -1,0 +1,108 @@
+========================== C PROGRAMS ========================== 
+
+# Symbol Table BST implementation
+
+Structure Definition:
+
+  typedef struct BSTNode {
+      char *name;              // Symbol name (key)
+      int position;            // Position/index in symbol table
+      struct BSTNode *left;    // Left child
+      struct BSTNode *right;   // Right child
+  } BSTNode;
+
+  typedef struct {
+      BSTNode *root;          // Root of the BST
+      int size;               // Number of symbols
+  } SymbolTableBST;
+
+- Each node stores a symbol name and its position. The left subtree contains smaller names, the right contains larger names -> inorder traversal will be sorted
+No duplicates allowed
+
+Advantages:
+- Ordered storage (alphabetical listing)
+- Simple implementation
+- Memory efficient
+- Good for small to medium datasets
+
+Disadvantages:
+- Can become unbalanced with sequential insertions
+- O(n) worst-case time complexity for unbalanced tree
+- Not ideal for very large symbol tables
+
+
+# Hash Table implementation
+
+Structure Definition:
+
+  typedef struct HTEntry {
+      char *name;             // Symbol name (key)
+      int position;           // Position/index in symbol table
+      struct HTEntry *next;   // Next entry in chain (collision handling)
+  } HTEntry;
+
+  typedef struct {
+      HTEntry **buckets;      // Array of bucket pointers
+      int capacity;           // Current table capacity
+      int size;               // Number of symbols
+      int next_position;      // Next available position number
+  } SymbolTableHT;
+
+- Uses separate chaining for collision resolution, dynamic resizing when load factor exceeds threshold (0.75).
+The hash function uses the djb2 algorithm. Each bucket is a linked list of entries
+
+Hash Function (djb2):
+  hash = 5381
+  for each character c in string:
+      hash = (hash * 33) + c
+  return hash % capacity
+
+Advantages:
+- O(1) average case for all operations
+- Scales well with large datasets
+- Fast lookups and insertions
+- Dynamic resizing maintains performance
+
+Disadvantages:
+- More complex implementation
+- Higher memory overhead
+- No natural ordering of symbols
+- Resizing operation is expensive (but infrequent)
+
+========================== LEXICAL ANALYSIS: ========================== 
+
+IDENTIFIERS:
+- Pattern: [A-Za-z_][A-Za-z0-9_]*
+- Must start with letter or underscore
+- Followed by any combination of letters, digits, underscores
+- Examples: variable1, _temp, myCounter
+- Stored in Symbol Table with type "id"
+- Represented in PIF with generic identifier code + ST position
+
+CONSTANTS:
+- Numbers: Pattern -?\d+(\.\d+)?
+  * Optional minus sign for negatives
+  * Integer or decimal format
+  * Examples: 42, -10, 3.14, -2.5
+  * Stored in Symbol Table as "const_num"
+  * All numbers use same PIF code, actual value in ST
+
+- Strings: Pattern "([^"\\]|\\.)*"
+  * Enclosed in double quotes
+  * Supports escape sequences
+  * Examples: "hello", "line\n", "say \"hi\""
+  * Stored in Symbol Table as "const_str"
+
+DETECTION PROCESS:
+1. Build master regex from token definitions (keywords, operators, units, etc.)
+2. Sort multi-char tokens by length (longest first) to prevent partial matches
+3. Match tokens left-to-right using compiled regex pattern
+4. Identify token type via named capture groups (KEYWORD, OP, ID, NUMBER, etc.)
+5. Store identifiers/constants in Symbol Table with unique positions
+6. Generate PIF entries: (token_code, ST_position) or (token_code, -1)
+7. Report lexical errors for unmatched characters
+
+OUTPUT:
+- PIF: Token codes paired with Symbol Table positions
+- ST: Index → (lexeme, type) mappings
+- Errors: Line numbers and invalid tokens

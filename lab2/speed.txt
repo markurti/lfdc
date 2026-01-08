@@ -1,0 +1,14 @@
+distances = [2000 m, 3500 m, 5000 m]
+times = [600 s, 1000 s, 1500 s]
+
+for i in [0, 1, 2] do {
+	d = distances[i]
+	t = times[i]
+	speed = d / t
+	print "Speed (m/s):"
+	print speed
+	convert speed to km
+	convert t to hr
+	print "Speed (km/hr):"
+	print speed
+}

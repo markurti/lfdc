@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+*.egg-info/
+dist/
+build/
+node_modules/
+
+# PLY generated files
+parser.out
+parsetab.py
+
+# C compiled files
+*.exe
+*.o
+*.out
+*.obj
+*.dll
+*.so
+*.dylib
+a.out
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Test outputs
+test_*.c
+test_*.exe
+*_genai.c
+*_yacc.c

@@ -1,0 +1,21 @@
+0	distances	id
+1	2000	const_num
+2	m	unit
+3	3500	const_num
+4	5000	const_num
+5	times	id
+6	600	const_num
+7	s	unit
+8	1000	const_num
+9	1500	const_num
+10	i	id
+11	0	const_num
+12	1	const_num
+13	2	const_num
+14	d	unit
+15	t	unit
+16	speed	id
+17	"Speed (m/s):"	const_str
+18	km	unit
+19	hr	unit
+20	"Speed (km/hr):"	const_str

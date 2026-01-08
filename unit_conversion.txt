@@ -1,0 +1,37 @@
+<program>       ::= <statement_list>
+<statement_list>::= <statement> <statement_list> | epsilon
+<statement>     ::= <assignment_stmt> | <conversion_stmt> | <print_stmt> | <if_stmt> | <for_stmt>
+<assignment_stmt> ::= <identifier> "=" <expression> <unit_opt>
+<conversion_stmt> ::= "convert" <identifier> "to" <unit>
+<print_stmt>     ::= "print" <expression>
+<if_stmt>        ::= "if" <condition> "then" <block> <else_opt>
+<else_opt>       ::= "else" <block> | epsilon
+<for_stmt>       ::= "for" <identifier> "in" <list_expr> "do" <block>
+<block>          ::= "{" <statement_list> "}"
+<condition>      ::= <expression> <comparison_op> <expression>
+<comparison_operator> ::= "==" | "!=" | ">" | "<" | ">=" | "<="
+<list_expr> ::= "[" <list_elements> "]"
+<list_elements> ::= <expression> <list_tail> | epsilon
+<list_tail> ::= "," <expression> <list_tail> | epsilon
+<expression> ::= <term> <expression_tail>
+<expression_tail> ::= ("+" | "-") <term> <expression_tail> | epsilon
+<term> ::= <factor> <term_tail>
+<term_tail> ::= ("*" | "/") <factor> <term_tail> | epsilon
+<factor> ::= <number> <unit_opt>
+           | <identifier>
+           | <identifier> "[" <expression> "]"
+           | "(" <expression> ")"
+<unit_opt> ::= <weight_unit> | <time_unit> | <distance_unit> | <fluid_unit> | epsilon
+<fluid_unit> ::= "ml" | "cl" | "dl" | "l"
+<distance_unit> ::= "mm" | "cm" | "dm" | "m" | "dam" | "hm" | "km"
+<time_unit> ::= "ms" | "s" | "min" | "hr" | "d" | "wk" | "mo" | "yr"
+<weight_unit> ::= "mg" | "cg" | "dg" | "g" | "dag" | "hg" | "kg" | "t"
+<identifier> ::= <letter> <id_tail>
+<id_tail> ::= <letter_or_digit> <id_tail> | epsilon
+<letter_or_digit> ::= <letter> | <digit>
+<number> ::= "0" | <optional_minus> <nz_digit> <number_tail>
+<number_tail> ::= <digit> <digits> | epsilon
+<optional_minus> ::= "-" | epsilon
+<letter> ::= "a" | "b" | ... | "z" | "A" | "B" | ... | "Z"
+<digit> ::= "0" | "1" | "2" | ... | "9"
+<nz_digit> ::= "1" | "2" | ... | "9"

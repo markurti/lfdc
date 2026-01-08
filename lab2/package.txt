@@ -1,0 +1,11 @@
+packages = [0.5 kg, 1.2 kg, 3.8 kg, 7.5 kg]
+
+for p in packages do {
+	convert p to g
+	if p > 3000 g then {
+		print "Heavy package"
+	} else {
+		print "Light package"
+	}
+	print p
+}

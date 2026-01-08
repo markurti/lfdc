@@ -1,0 +1,11 @@
+0	packages	id
+1	0.5	const_num
+2	kg	unit
+3	1.2	const_num
+4	3.8	const_num
+5	7.5	const_num
+6	p	id
+7	g	unit
+8	3000	const_num
+9	"Heavy package"	const_str
+10	"Light package"	const_str

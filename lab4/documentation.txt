@@ -1,0 +1,151 @@
+===========================================================
+============ Finite Automation for Identifiers ============
+===========================================================
+
+Q = {q₀, q₁} - Set of states
+q₀: initial state (no input processed yet)
+q₁: accepting state (valid identifier recognized)
+
+Σ = {a-z, A-Z, 0-9} - Input alphabet
+All lowercase letters: a, b, c, ..., z
+All uppercase letters: A, B, C, ..., Z
+All digits: 0, 1, 2, ..., 9
+
+q₀ - Initial state
+
+F = {q₁} - Set of final/accepting states
+
+δ: Q × Σ → Q - Transition function defined as:
+Current State | Input Symbol 	  | Next State 	| Description
+----------------------------------------------------------------------------------
+q₀	      | letter (a-z, A-Z) | q₁		| First character must be a letter
+----------------------------------------------------------------------------------
+q₀	      | digit (0-9)	  | reject	| Cannot start with digit
+----------------------------------------------------------------------------------
+q₁	      | letter (a-z, A-Z) | q₁		| Continue with letter
+----------------------------------------------------------------------------------
+q₁	      | digit (0-9)	  | q₁		| Continue with digit
+
+**Explanation**
+- The automaton starts in state q₀
+- Upon reading a letter, it transitions to accepting state q₁
+- In state q₁, it can read any letter or digit and remain in q₁
+- If a digit is encountered in q₀, the input is rejected
+- Any sequence ending in q₁ is accepted as a valid identifier
+
+============================================
+===== Regular Grammar for Identifiers: =====
+============================================
+
+(Right-Linear Grammar)
+S → letter A
+A → letter A | digit A | ε
+
+or explicitly:
+
+<identifier> → <letter> <id_tail>
+<id_tail> → <letter> <id_tail>
+<id_tail> → <digit> <id_tail>
+<id_tail> → ε
+
+<letter> → a | b | c | ... | z | A | B | C | ... | Z
+<digit> → 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+
+**Explanation:**
+- Start symbol: `<identifier>`
+- The grammar generates a letter followed by zero or more letters or digits
+- This is a right-linear grammar (type-3 in Chomsky hierarchy)
+- Equivalent regular expression: `[a-zA-Z][a-zA-Z0-9]*`
+
+Examples - Valid Identifiers:
+✓ x          - single letter
+✓ myVar      - mixed letters
+✓ temp1      - letter followed by digit
+✓ value123   - multiple digits at end
+
+Examples - Invalid Identifiers:
+✗ 1var       - starts with digit (rejected at q₀)
+✗ 123        - all digits (rejected at q₀)
+
+=========================================================
+============ Finite Automation for Constants ============
+=========================================================
+
+A constant in the language is an integer number that:
+- Can be zero: `0`
+- Can be a positive integer: `1`, `42`, `1234`
+- Can be a negative integer: `-5`, `-100`
+- Cannot have leading zeros (except standalone zero): `01`, `007` are invalid
+
+Q = {q₀, q₁, q₂, q₃} - Set of states
+q₀: initial state
+q₁: minus sign read, expecting non-zero digit
+q₂: accepting state (recognized "0")
+q₃: accepting state (recognized positive/negative integer)
+
+Σ = {-, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9} - Input alphabet
+Minus sign: -
+All digits: 0 through 9
+
+q₀ - Initial state
+
+F = {q₂, q₃} - Set of final/accepting states
+
+δ: Q × Σ → Q - Transition function defined as:
+Current State | Input Symbol | Next State | Description
+-------------------------------------------------------
+| q₀ 	      | 0 	     | q₂ 	  | Standalone zero
+| q₀ 	      | 1-9 	     | q₃ 	  | Positive integer starts
+| q₀ 	      | - 	     | q₁ 	  | Negative sign
+| q₁ 	      | 1-9 	     | q₃ 	  | Negative integer starts
+| q₁ 	      | 0 	     | reject 	  | Cannot have -0 or leading zero after minus
+| q₂ 	      | any 	     | reject 	  | Zero must be standalone
+| q₃ 	      | 0-9 	     | q₃ 	  | Continue building number
+
+**Explanation:**
+- From initial state q₀, reading "0" leads directly to accepting state q₂ (standalone zero)
+- Reading a non-zero digit (1-9) leads to accepting state q₃
+- Reading minus "-" leads to intermediate state q₁
+- From q₁, only non-zero digits (1-9) are allowed, leading to q₃
+- Once in q₃, any digit can be read (including 0) to build the number
+- States q₂ and q₃ are accepting states
+
+=========================================
+===== Regular Grammar for Constants =====
+=========================================
+
+(Right-linear grammar)
+S → 0
+S → N
+S → - N
+N → 1 D | 2 D | 3 D | 4 D | 5 D | 6 D | 7 D | 8 D | 9 D
+D → 0 D | 1 D | 2 D | 3 D | 4 D | 5 D | 6 D | 7 D | 8 D | 9 D | ε
+
+or explicitly:
+<number> → 0
+<number> → <nz_digit> <digits>
+<number> → - <nz_digit> <digits>
+
+<nz_digit> → 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+<digits> → <digit> <digits>
+<digits> → ε
+<digit> → 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+
+**Explanation:**
+- Start symbol: <number>
+- Three production rules from start symbol:
+	- Standalone zero
+	- Non-zero digit followed by optional digits (positive integer)
+	- Minus sign, non-zero digit, followed by optional digits (negative integer)
+- This is a right-linear grammar (type-3 in Chomsky hierarchy)
+- Equivalent regular expression: 0|-?[1-9][0-9]*
+
+Examples - Valid Constants:
+✓ 0          - standalone zero (accepted at q₂)
+✓ 42         - positive integer (accepted at q₃)
+✓ -15        - negative integer (q₀→q₁→q₃)
+
+Examples - Invalid Constants:
+✗ 00         - leading zero (q₂ cannot continue)
+✗ -0         - negative zero (q₁ rejects '0')
+✗ 007        - leading zeros (q₂ cannot continue)

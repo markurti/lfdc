@@ -1,0 +1,54 @@
+LL(1) Parser Documentation
+Overview
+This program implements an LL(1) parser for a unit conversion domain-specific language (DSL). It performs lexical and syntactic analysis, producing a parse tree in father-sibling representation.
+Components
+1. Scanner (Lexer)
+
+Input: Source code string
+Output: PIF (Program Internal Form) - sequence of tokens
+Method: Uses regular expressions representing Finite Automata for:
+
+Identifiers: [a-zA-Z][a-zA-Z0-9]*
+Constants: 0|[1-9][0-9]*
+
+
+Classifies keywords, units, operators, and delimiters
+
+2. Grammar
+
+LL(1) grammar for the DSL (left-recursion eliminated)
+Computes FIRST sets: terminals that can start each non-terminal
+Computes FOLLOW sets: terminals that can follow each non-terminal
+Builds parsing table M[non-terminal, terminal] using FIRST/FOLLOW
+
+3. LL(1) Parser
+
+Algorithm: Top-down predictive parsing
+Data structures:
+
+Stack: holds grammar symbols
+Input buffer: holds tokens from PIF
+Parsing table: guides production selection
+
+
+Process:
+
+Start with start symbol on stack
+If stack top matches input → consume both
+If stack top is non-terminal → lookup production in table, expand
+If epsilon production → pop stack without consuming input
+Continue until stack empty and input consumed
+
+
+
+4. Parse Tree Output
+
+Father-sibling representation: Each node stores:
+
+id: unique identifier
+symbol: grammar symbol
+father: parent node ID
+sibling: right sibling ID
+
+
+Output format: Table with Index, Symbol, Value, Father, Sibling columns

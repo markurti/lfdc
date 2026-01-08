@@ -1,0 +1,8 @@
+Unit Conversion DSL
+
+The Unit Conversion DSL allows converting from and into different units of the same type (e.g. g to kg or vice versa, but not kg to km). It even supports conversions on entire
+lists of the same type.
+You start by defining some variables and assigning values to them with their unit operator to specify their type.
+You can define a list with elements in it but the elements must be the same type.
+You can have for loops that iterate over the elements of a list.s
+You can have if-else statements to define conditions.
