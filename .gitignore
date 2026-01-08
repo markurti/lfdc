@@ -9,7 +9,7 @@ env/
 *.egg-info/
 dist/
 build/
-node_modules/git
+node_modules/
 
 # PLY generated files
 parser.out
